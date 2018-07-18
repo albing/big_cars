@@ -1,4 +1,5 @@
 from random import randrange
+import sys
 
 def string_gen(*opts):
     return opts[randrange(0,len(opts))]
@@ -34,12 +35,12 @@ class DataRow:
         ("Drive type", string_gen, ("AWD", "FWD", "RWD")),
     ]
 
-    def print_csv(self):
+    def print_csv(self, num_rows):
         num_cols = len(self.rows)
         fmt_str = "{}, ".join("" for i in self.rows) + "{}"
 
         print(fmt_str.format(*[row[0] for row in self.rows]))
-        for _ in range(10):
+        for _ in range(num_rows):
             row_line = [
                 x[1](*x[2])
                 for x in self.rows
@@ -48,5 +49,10 @@ class DataRow:
 
 if __name__=="__main__":
     generator = DataRow()
-    generator.print_csv()
+    try:
+        generator.print_csv(int(sys.argv[1]))
+    except ValueError:
+        print("{} is not a number".format(sys.argv[1]))
+    except IndexError:
+        generator.print_csv(10)
 
